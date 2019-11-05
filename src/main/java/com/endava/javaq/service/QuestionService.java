@@ -6,12 +6,7 @@ import com.endava.javaq.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.*;
 
 import static java.util.Objects.*;
 import static java.util.stream.Collectors.*;
@@ -25,14 +20,30 @@ public class QuestionService {
     private final JavaqProperties javaqProperties;
 
     public List<Question> generateTest() {
-        // bad implementation
-        Random rand = new Random();
-        return
-                IntStream.generate(() -> rand.nextInt(11))
-                        .peek(System.out::println)
-                        .mapToObj(x -> questionRepository.findById((long)x).orElse(null))
-                        .filter(el -> !isNull(el))
-                        .limit(javaqProperties.getNumberOfQuestions())
-                        .collect(toList());
+        List<Question> questions = questionRepository.findAll();
+        Collections.shuffle(questions);
+        return questions.stream()
+                .limit(javaqProperties.getNumberOfQuestions())
+                .collect(toList());
     }
+
+
+    public void deleteAll() {
+        questionRepository.deleteAll();
+    }
+
+
+    public boolean save(Question question) {
+        return !isNull(questionRepository.save(question));
+    }
+
+
+    public Optional<Question> findById(Long id) {
+        return questionRepository.findById(id);
+    }
+
+    public List<Question> findAll() {
+        return questionRepository.findAll();
+    }
+
 }

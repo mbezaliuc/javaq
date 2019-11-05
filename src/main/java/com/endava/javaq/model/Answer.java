@@ -1,8 +1,11 @@
 package com.endava.javaq.model;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "T_ANSWER")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -11,8 +14,18 @@ import org.springframework.data.annotation.Id;
 public class Answer {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column
     private String answer;
+
+    @Column
     private boolean correct;
+
+    public Answer(String answer, boolean correct) {
+        this.answer = answer;
+        this.correct = correct;
+    }
 
 }
